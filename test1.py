@@ -40,6 +40,3 @@ print('Float of %s Equal'%fourth_number,float(fourth_number))
 print('Complex of %s Equal'%fourth_number,complex(fourth_number))
 print('Float of %s Equal'%fifth_number,float(fifth_number))
 print('Complex of %s Equal'%fifth_number,complex(fifth_number))'''
-a = 10
-b = 2
-print(a/b)
