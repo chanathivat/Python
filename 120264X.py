@@ -31,7 +31,7 @@ def add(fname,lname,email,sex,age,year):
         c.execute(sql,data)
         conn.commit()
         c.close()
-        print('เพิ่มรายการเรียบร้อย')
+        print('เพิ่มข้อมูลเรียบร้อย')
 
     except sqlite3.Error as e :
         print(e)
@@ -60,7 +60,7 @@ def edit(fname,lname,email,sex,age,year,iid):
         c.execute('''UPDATE students SET fname =?, lname =?, email =?, sex =?, age =?, year =? WHERE id = ?''',data)
         conn.commit()
         c.close()
-        print('แก้ไขเรียบร้อย\n')
+        print('แก้ไขข้อมูลเรียบร้อย\n')
         
     except sqlite3.Error as e :
         print(e)
@@ -75,7 +75,7 @@ def delete(del_id):
         c.execute('DELETE FROM students WHERE id = {}'.format(del_id))
         conn.commit()
         c.close()
-        print('ลบรายการเรียบร้อย\n')       
+        print('ลบข้อมูลเรียบร้อย\n')       
 
     except sqlite3.Error as e :
         print(e)
@@ -95,7 +95,7 @@ while True:
         efn,eln,eem,es,ea,ey = input('ชื่อ-สกุล-อีเมล-เพศ-อายุ-ชั้นปี : ').split()
         edit(efn,eln,eem,es,ea,ey,iid)
     elif choice == 'd':
-        del_id = input('กรอกลำดับที่ต้องการลบ : ')
+        del_id = input('เลือกลำดับที่ต้องการลบ : ')
         delete(del_id)
 
     elif choice == 'x':
@@ -107,7 +107,7 @@ while True:
             print('ได้ทำการกลับสู่ระบบแล้ว')
             continue
         else:
-            print('Fail!')
+            print('ทามรายย กดรายยอะ')
 '''"""reset"""     
 DELETE FROM students;
 DELETE FROM sqlite_sequence WHERE name = 'students'
