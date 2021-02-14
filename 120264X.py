@@ -108,7 +108,7 @@ while True:
             continue
         else:
             print('Fail!')
-'''     
+'''"""reset"""     
 DELETE FROM students;
 DELETE FROM sqlite_sequence WHERE name = 'students'
 '''
