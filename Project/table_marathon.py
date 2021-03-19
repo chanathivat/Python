@@ -11,5 +11,6 @@ c.execute("""CREATE TABLE marathon (id integer PRIMARY KEY AUTOINCREMENT,
     typerun varchar(30) NOT NULL,
     email varchar(50) NOT NULL,
     num varchar(10) NOT NULL)""")
+    
 conn.commit()
 conn.close()
