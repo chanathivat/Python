@@ -6,10 +6,10 @@ c = conn.cursor()
 
 def menu():
     global choice
-    print('กรอกข้อมูล a ')
-    print('เช็ตข้อมูล b ')
-    print('สำหรับแอดมิน c ')
-    print('ปิด exit\n')
+    print('กรอกข้อมูล [a] ')
+    print('เช็ตข้อมูล [b] ')
+    print('สำหรับแอดมิน [c] ')
+    print('ปิด [exit]\n')
     choice = input('เลือกรายการ ')
 
 def add():
@@ -35,19 +35,18 @@ def add():
 def showx():
             conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
             c = conn.cursor()
-            idx = input('ตรวจสอบเลขบัตร\t')#
+            idx = input('\nตรวจสอบเลขบัตร\t')#
             idxx = (idx,)
             find_user = ('SELECT * FROM marathon WHERE ids = ?')
             c.execute(find_user,idxx,)
-            resultx = c.fetchmany()
-            for x in resultx :
-                print ('เลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+            x = c.fetchone()
+            print ('เลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
             conn.commit()
             conn.close()
 
 def admin():
-    loginx = input('\nlogin ')
-    passwordx = input('pass ') 
+    loginx = input('\nLogin ')
+    passwordx = input('Password ') 
     conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
     c = conn.cursor()
     statement = f"SELECT username from adminzz WHERE username='{loginx}' AND Password = '{passwordx}';"
@@ -60,6 +59,7 @@ def admin():
             global choice2
             print('ลบข้อมูล a')
             print('เช็คข้อมูลผู้สมัคร b ')
+            print('แก้ไขข้อมูล e')
             print('ออกจากระบบ exit ')
             choice2 = input('เลือกทำรายการ')
 
@@ -83,13 +83,12 @@ def admin():
             def show2():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                idx = input('ตรวจสอบเลขบัตร\t')#
+                idx = input('\nรวจสอบเลขบัตร\t')
                 idxx = (idx,)
                 find_user = ('SELECT * FROM marathon WHERE ids = ?')
                 c.execute(find_user,idxx,)
-                resultz = c.fetchmany()
-                for x in resultz :
-                    print ('เลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                x = c.fetchone()
+                print ('เลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
             def show3():
@@ -142,17 +141,35 @@ def admin():
             elif showa == 'funrun':
                 showfunrun()
 
+        def edit():
+            conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+            c = conn.cursor()
+            iid = input('เลือกเลขที่ต้องการแก้ไข : ')
+            fname,lname = input('ชื่อ-สกุล ').split()
+            ids = input('เลขบัตรประจำตัวประชาชน ')
+            sex = input('เพศ ')
+            age = input('อายุ ')
+            typerun = input('ประเภท ')
+            email = input('อีเมล ')
+            num = input('เบอร์โทร ')
+            data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
+            c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE id = ?''',data)
+            conn.commit()
+            c.close()
+            print('แก้ไขข้อมูลเรียบร้อย\n')
+
         while True:
             adminmenu()
             if  choice2 == 'a':
                 dele()
             if choice2 == 'b':
                 show()
+            if choice2 == 'e':
+                edit()
             elif choice2 == 'exit':
                 print('++++++++++ออกจากระบบแล้ว++++++++\n')
                 break
-
-            
+           
 while True:
     menu()
     if choice == 'a':
