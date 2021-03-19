@@ -57,10 +57,10 @@ def admin():
         print("\n+++++++เข้าสู่ระบบแล้ว+++++++\n")
         def adminmenu():
             global choice2
-            print('ลบข้อมูล a')
-            print('เช็คข้อมูลผู้สมัคร b ')
-            print('แก้ไขข้อมูล e')
-            print('ออกจากระบบ exit ')
+            print('ลบข้อมูล [a]')
+            print('เช็คข้อมูลผู้สมัคร [b] ')
+            print('แก้ไขข้อมูล [e]')
+            print('ออกจากระบบ [exit] ')
             choice2 = input('เลือกทำรายการ')
 
         def dele():
@@ -75,8 +75,8 @@ def admin():
             dele2()
 
         def show():
-            print('\nแสดงข้อมูลทั้งหมด a ')
-            print('แสดงข้อมูลรายบุคคล b ')
+            print('\nแสดงข้อมูลทั้งหมด [a] ')
+            print('แสดงข้อมูลรายบุคคล [b] ')
             print('แสดงข้อมูลประเภท [full/half/mini/funrun]')
             showa = input('เลือกทำรายการ ')
             
@@ -88,7 +88,7 @@ def admin():
                 find_user = ('SELECT * FROM marathon WHERE ids = ?')
                 c.execute(find_user,idxx,)
                 x = c.fetchone()
-                print ('เลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                print ('เลขที่\t{0:<;;8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
             def show3():
