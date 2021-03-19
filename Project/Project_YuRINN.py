@@ -52,7 +52,7 @@ def admin():
     statement = f"SELECT username from adminzz WHERE username='{loginx}' AND Password = '{passwordx}';"
     c.execute(statement)
     if not c.fetchone():
-        print("Login failed")
+        print("\nLogin failed!")
     else:
         print("\n+++++++เข้าสู่ระบบแล้ว+++++++\n")
         def adminmenu():
@@ -64,7 +64,7 @@ def admin():
             choice2 = input('เลือกทำรายการ')
 
         def dele():
-            del_id = input('เลขที่ต้องการลบ : ')
+            del_id = input('\nเลขบัตรที่ต้องการลบ : ')
             def dele2():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -144,7 +144,7 @@ def admin():
         def edit():
             conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
             c = conn.cursor()
-            iid = input('เลือกเลขที่ต้องการแก้ไข : ')
+            iid = input('\nเลือกเลขที่ต้องการแก้ไข : ')
             fname,lname = input('ชื่อ-สกุล ').split()
             ids = input('เลขบัตรประจำตัวประชาชน ')
             sex = input('เพศ ')
