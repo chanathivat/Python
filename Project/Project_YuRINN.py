@@ -231,10 +231,13 @@ def ss():
     conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
     c = conn.cursor()
 
-    c.execute('SELECT * FROM  marathon2 ORDER BY timex')
-    conn.commit()
-    result = c.fetchone()
-    for x in
+    c.execute('SELECT * FROM  marathon2 WHERE typerun = "full" ORDER BY timex')
+ 
+    result = c.fetchall()
+    for x in result:
+        print(x[1],x[4],x[5])
+    conn.commit()        
+    c.close()
 
 while True:
     menu()
@@ -247,5 +250,7 @@ while True:
         showxx()
     elif choice == 'l':
         admin()
+    elif choice == 'ss':
+        ss()
     elif choice == 'exit':
         break
