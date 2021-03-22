@@ -14,30 +14,60 @@ def menu():
     choice = input('เลือกรายการ ')
 
 def add():
-    try:
+    try:    
+        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+        c = conn.cursor()
         fname,lname = input('ชื่อ-สกุล\t').split()
-        ids = int(input('เลขประจำตัวประชาชน\t'))
-        sex = str(input('เพศ\t'))
+        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')        
+        c = conn.cursor()
+        ids = str(input('เลขประจำตัวประชาชน\t'))
+        if len(ids) != 13:
+            c.close()
+            add()
+
+        sex = str(input('เพศ [M/F]\t'))
+        if sex == 'M' or sex == 'F' :
+            pass
+        else:
+            c.close()
+            add()         
         age = int(input('อายุ\t'))
         typerun = str(input('ประเภทการวิ่ง [full/half/mini/funrun]\t'))
+        if typerun == 'full':
+            pass
+        elif typerun == 'half':
+            pass
+        elif typerun == 'mini':
+            pass
+        elif typerun == 'funrun':
+            pass
+        else:
+            c.close()
+            add()
         email = input('อีเมล\t')
         num = str(input('เบอร์โทร\t'))
-
-        def add2():
-            conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-            c = conn.cursor()
-            sql = '''INSERT INTO marathon (fname,lname,ids,sex,age,typerun,email,num) VALUES (?,?,?,?,?,?,?,?)'''
-            data = (fname,lname,ids,sex,age,typerun,email,num)
-            sql2 = '''INSERT INTO marathon2 (fname,lname,ids,typerun) VALUES (?,?,?,?)'''
-            data2 = (fname,lname,ids,typerun)
-            c.execute(sql,data)
-            c.execute(sql2,data2)
-            conn.commit()
+        if len(num) != 10:
             c.close()
-            print('เพิ่มข้อมูลเรียบร้อย\n')
-        add2()
+            add()
+        sql = '''INSERT INTO marathon (fname,lname,ids,sex,age,typerun,email,num) VALUES (?,?,?,?,?,?,?,?)'''
+        data = (fname,lname,ids,sex,age,typerun,email,num)
+        sql2 = '''INSERT INTO marathon2 (fname,lname,ids,typerun) VALUES (?,?,?,?)'''
+        data2 = (fname,lname,ids,typerun)
+        c.execute(sql,data)
+        c.execute(sql2,data2)
+        conn.commit()
+        c.close()
+        print('เพิ่มข้อมูลเรียบร้อย\n')
+
     except:
-        print('เกิดข้อผิดพลาด!')
+        print('error')
+
+def check_data(c):
+    try:
+        c[0]
+        return True
+    except:
+        return False
 
 def showx():
     try:
@@ -98,22 +128,21 @@ def admin():
         def dele():
             try:
                 del_id = input('\nเลขบัตรที่ต้องการลบ : ')
-                def dele2():
-                    conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-                    c = conn.cursor()
-                    c.execute('DELETE FROM marathon WHERE ids = {}'.format(del_id))
-                    c.execute('DELETE FROM marathon2 WHERE ids = {}'.format(del_id))
-                    conn.commit()
-                    c.close()
-                    print('ลบข้อมูลเรียบร้อย\n')
-                dele2()
+                conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                c = conn.cursor()
+                c.execute('DELETE FROM marathon WHERE ids = {}'.format(del_id))
+                c.execute('DELETE FROM marathon2 WHERE ids = {}'.format(del_id))
+                conn.commit()
+                c.close()
+                print('ลบข้อมูลเรียบร้อย\n')
             except:
                 print('\nERROR!\n')
+                
 
         def show():
-            print('\nแสดงข้อมูลทั้งหมด [a] ')
-            print('แสดงข้อมูลรายบุคคล [b] ')
-            print('แสดงข้อมูลประเภท [full/half/mini/funrun]')
+            print('\n>แสดงข้อมูลทั้งหมด [a] ')
+            print('>แสดงข้อมูลรายบุคคล [b] ')
+            print('>แสดงข้อมูลประเภท [full/half/mini/funrun]')
             showa = input('เลือกทำรายการ ')
             
             def show2():
@@ -127,6 +156,7 @@ def admin():
                 print ('\nเลขที่\t{0:<;;8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
+
             def show3():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -136,6 +166,7 @@ def admin():
                     print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
+
             def showfull():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -143,6 +174,9 @@ def admin():
                 resultfull = c.fetchall()
                 for x in resultfull:
                     print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                conn.commit()
+                conn.close()
+                
             def showhalf():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -150,6 +184,9 @@ def admin():
                 resulthalf = c.fetchall()
                 for x in resulthalf:
                     print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                conn.commit()
+                conn.close()
+
             def showmini():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -157,6 +194,9 @@ def admin():
                 resultmini = c.fetchall()
                 for x in resultmini:
                     print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                conn.commit()
+                conn.close()
+
             def showfunrun():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
@@ -164,6 +204,30 @@ def admin():
                 resultfunrun = c.fetchall()
                 for x in resultfunrun:
                     print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                conn.commit()
+                conn.close()
+
+            def showre():
+                try:
+                    conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                    c = conn.cursor()
+                    ccc = input('')
+                    c.execute('SELECT * FROM  marathon2 WHERE typerun = "{}" ORDER BY timex'.format(ccc)) 
+                    result = c.fetchall()
+                    i=0
+                    print('อันดับของ {}'.format(ccc))
+                    print('-'*64)
+                    print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
+                    print('-'*64)
+                    for x in result:
+                        i+=1
+                        print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[4],x[5]))
+                    print('-'*64,'\n')
+                    conn.commit()        
+                    
+                except:
+                    print('ERROR!')
+
             if showa == 'a':
                 show3()
             elif showa == 'b':
@@ -176,6 +240,8 @@ def admin():
                 showmini()
             elif showa == 'funrun':
                 showfunrun()
+            elif showa == 's':
+                showre()
 
         def edit():
             try:
@@ -228,16 +294,27 @@ def admin():
                 break
 
 def ss():
-    conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-    c = conn.cursor()
-
-    c.execute('SELECT * FROM  marathon2 WHERE typerun = "full" ORDER BY timex')
- 
-    result = c.fetchall()
-    for x in result:
-        print(x[1],x[4],x[5])
-    conn.commit()        
-    c.close()
+    try:
+        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+        c = conn.cursor()
+        ccc = input('')
+        vvv = input('')
+        c.execute('SELECT * FROM  marathon2 WHERE typerun = "{}" ORDER BY timex'.format(ccc))
+        c.execute('SELECT * FROM marathon2 WHERE ids = {} '.format(vvv)) 
+        result = c.fetchall()
+        i=0
+        print('อันดับของ {}'.format(ccc))
+        print('-'*64)
+        print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
+        print('-'*64)
+        for x in result:
+            i+=1
+            print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[4],x[5]))
+        print('-'*64,'\n')
+        conn.commit()        
+        c.close()
+    except:
+        print('ERROR!')
 
 while True:
     menu()
