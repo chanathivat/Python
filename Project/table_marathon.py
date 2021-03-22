@@ -3,14 +3,14 @@ conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marath
 c = conn.cursor()
 
 c.execute("""CREATE TABLE marathon (id integer PRIMARY KEY AUTOINCREMENT,
-    fname varchar(30) NULL,
-    lname varchar(30) NULL,
-    ids varchar(20) NULL,
-    sex varchar(10) NULL,
-    age varchar(10) NULL,
-    typerun varchar(30) NULL,
-    email varchar(50) NULL,
-    num varchar(10) NULL)""")
+    fname NULL,
+    lname NULL,
+    ids NULL,
+    sex NULL,
+    age NULL,
+    typerun NULL,
+    email NULL,
+    num NULL)""")
     
 conn.commit()
 conn.close()
