@@ -6,33 +6,35 @@ c = conn.cursor()
 
 def menu():
     global choice
-    print('กรอกข้อมูล [a] ')
-    print('เช็ตข้อมูล [b] ')
-    print('แสดงผลการวิ่ง [c]')
-    print('สำหรับแอดมิน [l] ')
-    print('ปิด [exit]\n')
-    choice = input('เลือกรายการ ')
+    print('-'*39)
+    print('| {0:<25}|{1:<10}|'.format(' Register','    a '))
+    print('| {0:<25}|{1:<10}|'.format(' Check Information','    b '))
+    print('| {0:<25}|{1:<10}|'.format(' Check running result','    c '))
+    print('| {0:<25}|{1:<10}|'.format(' Admin only','    l '))
+    print('| {0:<25}|{1:<10}|'.format(' Close the program','   exit '))
+    print('-'*39)
+    choice = input('- Select > ')
 
 def add():
     try:    
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        ids = str(input('เลขประจำตัวประชาชน\t'))
+        ids = str(input('ID card number\t'))
         if len(ids) != 13:
             c.close()
             add()         
         c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(ids))
         b = c.fetchone()    
         if not b:
-            fname,lname = input('ชื่อ-สกุล\t').split()                    
-            sex = str(input('เพศ [M/F]\t'))
+            fname,lname = input('Name - Surname\t').split()                    
+            sex = str(input('Gender [M/F]\t'))
             if sex == 'M' or sex == 'F' :
                 pass
             else:
                 c.close()
                 add()                    
-            age = int(input('อายุ\t'))
-            typerun = str(input('ประเภทการวิ่ง [full/half/mini/funrun]\t'))
+            age = int(input('Age\t'))
+            typerun = str(input('Running Type [full/half/mini/funrun]\t'))
             if typerun == 'full':
                 pass
             elif typerun == 'half':
@@ -44,8 +46,8 @@ def add():
             else:
                 c.close()
                 add()
-            email = input('อีเมล\t')
-            num = str(input('เบอร์โทร\t'))
+            email = input('Email\t')
+            num = str(input('Phone number\t'))
             if len(num) != 10:
                 c.close()
                 add()
@@ -57,11 +59,11 @@ def add():
             c.execute(sql2,data2)
             conn.commit()
             c.close()
-            print('เพิ่มข้อมูลเรียบร้อย\n')   
+            print('Added successfully\n')   
         else:
             c.close()
-            print('หมายเลขซ้ำ!!\n')
-            menu()           
+            print('This number already exists!!\n')
+            add()           
     except:
         print('error')
 
@@ -69,16 +71,16 @@ def showx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx = str(input('\nตรวจสอบเลขบัตร\t'))#
+        idx = str(input('\nCheck your ID card number\t'))#
         idxx = (idx,)
         find_user = ('SELECT * FROM marathon WHERE ids = ?')
         c.execute(find_user,idxx,)
         x = c.fetchone()   
         if  not x:
-            print("\nไม่พบข้อมูล!\n")
+            print("\nNo data found!\n")
             c.close()
         else: 
-            print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+            print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
             conn.commit()
             c.close()
     except:
@@ -88,15 +90,15 @@ def showxx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx2 = str(input('\nตรวจสอบเลขบัตร\t'))#
+        idx2 = str(input('\nCheck your ID card number\t'))#
         idxx2 = (idx2,)
         find_user2 = ('SELECT * FROM marathon2 WHERE ids = ?')
         c.execute(find_user2,idxx2,)
         x = c.fetchone()    
         if  not x:
-            print("\nไม่พบข้อมูล!\n")
+            print("\nNo data found!\n")
         else:
-            print('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nประเภทการวิ่ง\t{4}\nเวลา\t{5}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5]))
+            print('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nRunning Type\t{4}\nTime\t{5}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5]))
             conn.commit()
             conn.close()
     except:
@@ -112,41 +114,46 @@ def admin():
     if not c.fetchone():
         print("\nLogin failed!")
     else:
-        print("\n+++++++เข้าสู่ระบบแล้ว+++++++\n")
+        print("\n--------------- Already logged in ---------------\n")
         def adminmenu():
             global choice2
-            print('ลบข้อมูล [a]')
-            print('เช็คข้อมูลผู้สมัคร [b] ')
-            print('แก้ไขข้อมูล [e]')
-            print('เพิ่มเวลา/แก้เวลา [et]')
-            print('ออกจากระบบ [exit] ')
-            choice2 = input('เลือกทำรายการ')
+            print('-'*49)
+            print('| {0:<35}|{1:<10}|'.format(' Delete data','    a '))
+            print('| {0:<35}|{1:<10}|'.format(' Check applicant information','    b '))
+            print('| {0:<35}|{1:<10}|'.format(' Edit information','    e '))
+            print('| {0:<35}|{1:<10}|'.format(' Edit time / Add time','    ea '))
+            print('| {0:<35}|{1:<10}|'.format(' Log out','   exit '))
+            print('-'*49)
+            choice2 = input('- Select > ')
 
         def dele():
             try:
-                del_id = input('\nเลขบัตรที่ต้องการลบ : ')
+                del_id = input('\nInsert ID card to be deleted : ')
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
                 c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(del_id))
                 b = c.fetchone()
                 if not b:
-                    print('ไม่พบข้อมูล!\n')
+                    print('No data found!\n')
                 else:
                     c.execute('DELETE FROM marathon WHERE ids = "{}"'.format(del_id))
                     c.execute('DELETE FROM marathon2 WHERE ids = "{}"'.format(del_id))
                     conn.commit()
                     c.close()
-                    print('ลบข้อมูลเรียบร้อย\n')
+                    print('The data has been deleted.\n')
             except:
                 print('\nERROR!\n')
                 
 
         def show():
-            print('\n>แสดงข้อมูลทั้งหมด [a] ')
-            print('>แสดงข้อมูลรายบุคคล [b] ')
-            print('>แสดงข้อมูลประเภท [full/half/mini/funrun]')
-            print('>แสดงอันดับ [s]')
-            showa = input('เลือกทำรายการ ')
+            print('-'*64)
+            print('| {0:<35}|{1:<25}|'.format('> Show all information','           a '))
+            print('| {0:<35}|{1:<25}|'.format('> Show individual information','           b '))
+            print('| {0:<35}|{1:<25}|'.format('> Show running type information','  full/half/mini/funrun'))
+            print('| {0:<35}|{1:<25}|'.format('> Show rank','           s '))
+            print('| {0:<35}|{1:<25}|'.format('> Back','          back '))
+            print('-'*64)
+            showa = input('- Select > ')
             
             def show2():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
@@ -156,7 +163,7 @@ def admin():
                 find_user = ('SELECT * FROM marathon WHERE ids = ?')
                 c.execute(find_user,idxx,)
                 x = c.fetchone()
-                print ('\nเลขที่\t{0:<;;8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
 
@@ -166,7 +173,7 @@ def admin():
                 c.execute('''SELECT * FROM marathon''')
                 result = c.fetchall()
                 for x in result :
-                    print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
 
@@ -176,7 +183,7 @@ def admin():
                 c.execute(' SELECT * FROM marathon WHERE typerun = "full"')
                 resultfull = c.fetchall()
                 for x in resultfull:
-                    print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
                 
@@ -186,7 +193,7 @@ def admin():
                 c.execute(' SELECT * FROM marathon WHERE typerun = "half"')
                 resulthalf = c.fetchall()
                 for x in resulthalf:
-                    print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
 
@@ -196,7 +203,7 @@ def admin():
                 c.execute(' SELECT * FROM marathon WHERE typerun = "mini"')
                 resultmini = c.fetchall()
                 for x in resultmini:
-                    print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
 
@@ -206,7 +213,7 @@ def admin():
                 c.execute(' SELECT * FROM marathon WHERE typerun = "funrun"')
                 resultfunrun = c.fetchall()
                 for x in resultfunrun:
-                    print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
                 conn.commit()
                 conn.close()
 
@@ -245,6 +252,9 @@ def admin():
                 showfunrun()
             elif showa == 's':
                 showre()
+            if showa == 'back':
+                adminmenu()
+
 
         def edit():
             try:
@@ -254,15 +264,15 @@ def admin():
                 c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
-                    print('ไม่พบข้อมูล!\n')
+                    print('No data found!\n')
                 else:                                
-                    fname,lname = input('ชื่อ-สกุล >>> ').split()
+                    fname,lname = input('Name - Surname >>> ').split()
                     ids = input('เลขบัตรประจำตัวประชาชน >>> ')
-                    sex = input('เพศ >>> ')
-                    age = input('อายุ >>> ')
+                    sex = input('Gender >>> ')
+                    age = input('Age >>> ')
                     typerun = input('ประเภท >>> ')
-                    email = input('อีเมล >>> ')
-                    num = input('เบอร์โทร >>> ')
+                    email = input('Email >>> ')
+                    num = input('Phone number >>> ')
                     data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
                     data2 = (fname,lname,ids,typerun,'{}'.format(iid))
                     c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE id = ?''',data)
@@ -278,14 +288,14 @@ def admin():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
                 iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
-                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
+                c.execute('SELECT * FROM marathon2 WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
-                    print('ไม่พบข้อมูล!\n')
+                    print('No data found!\n')
                 else:
-                    timex = input('เวลา >>> ')
+                    timex = input('Time >>> ')
                     data = (timex,'{}'.format(iid))
-                    c.execute('''UPDATE marathon2 SET timex = ? WHERE id = ?''',data)
+                    c.execute('''UPDATE marathon2 SET timex = ? WHERE ids = ?''',data)
                     conn.commit()
                     c.close()
                     print('แก้ไขข้อมูลเรียบร้อย\n')
@@ -300,10 +310,10 @@ def admin():
                 show()
             if choice2 == 'e':
                 edit()
-            elif choice2 == 'et':
+            elif choice2 == 'ea':
                 edit2()
             elif choice2 == 'exit':
-                print('++++++++++ออกจากระบบแล้ว++++++++\n')
+                print('\n-------------- Logged out -------------\n')
                 break
 
 def ss():
@@ -337,6 +347,7 @@ while True:
     elif choice == 'c':
         showxx()
     elif choice == 'l':
+        os.system('cls')
         admin()
     elif choice == 'ss':
         ss()
