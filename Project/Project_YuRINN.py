@@ -17,44 +17,51 @@ def add():
     try:    
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        ids = input('เลขประจำตัวประชาชน\t')
+        ids = str(input('เลขประจำตัวประชาชน\t'))
         if len(ids) != 13:
             c.close()
-            add()       
-        fname,lname = input('ชื่อ-สกุล\t').split()                    
-        sex = str(input('เพศ [M/F]\t'))
-        if sex == 'M' or sex == 'F' :
-            pass
+            add()         
+        c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(ids))
+        b = c.fetchone()    
+        if not b:
+            fname,lname = input('ชื่อ-สกุล\t').split()                    
+            sex = str(input('เพศ [M/F]\t'))
+            if sex == 'M' or sex == 'F' :
+                pass
+            else:
+                c.close()
+                add()                    
+            age = int(input('อายุ\t'))
+            typerun = str(input('ประเภทการวิ่ง [full/half/mini/funrun]\t'))
+            if typerun == 'full':
+                pass
+            elif typerun == 'half':
+                pass
+            elif typerun == 'mini':
+                pass
+            elif typerun == 'funrun':
+                pass
+            else:
+                c.close()
+                add()
+            email = input('อีเมล\t')
+            num = str(input('เบอร์โทร\t'))
+            if len(num) != 10:
+                c.close()
+                add()
+            sql = '''INSERT INTO marathon (fname,lname,ids,sex,age,typerun,email,num) VALUES (?,?,?,?,?,?,?,?)'''
+            data = (fname,lname,ids,sex,age,typerun,email,num)
+            sql2 = '''INSERT INTO marathon2 (fname,lname,ids,typerun) VALUES (?,?,?,?)'''
+            data2 = (fname,lname,ids,typerun)
+            c.execute(sql,data)
+            c.execute(sql2,data2)
+            conn.commit()
+            c.close()
+            print('เพิ่มข้อมูลเรียบร้อย\n')   
         else:
             c.close()
-            add()                    
-        age = int(input('อายุ\t'))
-        typerun = str(input('ประเภทการวิ่ง [full/half/mini/funrun]\t'))
-        if typerun == 'full':
-            pass
-        elif typerun == 'half':
-            pass
-        elif typerun == 'mini':
-            pass
-        elif typerun == 'funrun':
-            pass
-        else:
-            c.close()
-            add()
-        email = input('อีเมล\t')
-        num = str(input('เบอร์โทร\t'))
-        if len(num) != 10:
-            c.close()
-            add()
-        sql = '''INSERT INTO marathon (fname,lname,ids,sex,age,typerun,email,num) VALUES (?,?,?,?,?,?,?,?)'''
-        data = (fname,lname,ids,sex,age,typerun,email,num)
-        sql2 = '''INSERT INTO marathon2 (fname,lname,ids,typerun) VALUES (?,?,?,?)'''
-        data2 = (fname,lname,ids,typerun)
-        c.execute(sql,data)
-        c.execute(sql2,data2)
-        conn.commit()
-        c.close()
-        print('เพิ่มข้อมูลเรียบร้อย\n')              
+            print('หมายเลขซ้ำ!!\n')
+            menu()           
     except:
         print('error')
 
@@ -62,17 +69,18 @@ def showx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx = int(input('\nตรวจสอบเลขบัตร\t'))#
+        idx = str(input('\nตรวจสอบเลขบัตร\t'))#
         idxx = (idx,)
         find_user = ('SELECT * FROM marathon WHERE ids = ?')
         c.execute(find_user,idxx,)
         x = c.fetchone()   
         if  not x:
             print("\nไม่พบข้อมูล!\n")
+            c.close()
         else: 
             print ('\nเลขที่\t{0:<8}\nชื่อ-สกุล\t{1:<15}{2:<15}\nเลขประจำตัวประชาชน\t{3:<27}\nเพศ\t{4}\nอายุ\t{5}\nประเภทการวิ่ง\t{6}\nอีเมล\t{7}\nเบอร์โทร\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
             conn.commit()
-            conn.close()
+            c.close()
     except:
         print('ERROR!')
 
@@ -80,7 +88,7 @@ def showxx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx2 = int(input('\nตรวจสอบเลขบัตร\t'))#
+        idx2 = str(input('\nตรวจสอบเลขบัตร\t'))#
         idxx2 = (idx2,)
         find_user2 = ('SELECT * FROM marathon2 WHERE ids = ?')
         c.execute(find_user2,idxx2,)
@@ -119,13 +127,13 @@ def admin():
                 del_id = input('\nเลขบัตรที่ต้องการลบ : ')
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                c.execute('SELECT * FROM marathon WHERE ids = {}'.format(del_id))
-                b = c.fetchall()
+                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(del_id))
+                b = c.fetchone()
                 if not b:
                     print('ไม่พบข้อมูล!\n')
                 else:
-                    c.execute('DELETE FROM marathon WHERE ids = {}'.format(del_id))
-                    c.execute('DELETE FROM marathon2 WHERE ids = {}'.format(del_id))
+                    c.execute('DELETE FROM marathon WHERE ids = "{}"'.format(del_id))
+                    c.execute('DELETE FROM marathon2 WHERE ids = "{}"'.format(del_id))
                     conn.commit()
                     c.close()
                     print('ลบข้อมูลเรียบร้อย\n')
@@ -242,8 +250,8 @@ def admin():
             try:
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                iid = input('\nเลือกเลขที่ต้องการแก้ไข : ')
-                c.execute('SELECT * FROM marathon WHERE ids = {}'.format(iid))
+                iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
+                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
                     print('ไม่พบข้อมูล!\n')
@@ -269,8 +277,8 @@ def admin():
             try:
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                iid = input('\nเลือกเลขที่ต้องการแก้ไข : ')
-                c.execute('SELECT * FROM marathon WHERE ids = {}'.format(iid))
+                iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
+                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
                     print('ไม่พบข้อมูล!\n')
