@@ -10,7 +10,8 @@ c.execute("""CREATE TABLE marathon (id integer PRIMARY KEY AUTOINCREMENT,
     age NULL,
     typerun NULL,
     email NULL,
-    num NULL)""")
+    num NULL,
+    timex NULL)""")
     
 conn.commit()
 conn.close()

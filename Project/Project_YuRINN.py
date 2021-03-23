@@ -53,13 +53,10 @@ def add():
                 add()
             sql = '''INSERT INTO marathon (fname,lname,ids,sex,age,typerun,email,num) VALUES (?,?,?,?,?,?,?,?)'''
             data = (fname,lname,ids,sex,age,typerun,email,num)
-            sql2 = '''INSERT INTO marathon2 (fname,lname,ids,typerun) VALUES (?,?,?,?)'''
-            data2 = (fname,lname,ids,typerun)
             c.execute(sql,data)
-            c.execute(sql2,data2)
             conn.commit()
             c.close()
-            print('Added successfully\n')   
+            print('Added successfully.\n')   
         else:
             c.close()
             print('This number already exists!!\n')
@@ -92,7 +89,7 @@ def showxx():
         c = conn.cursor()
         idx2 = str(input('\nCheck your ID card number\t'))#
         idxx2 = (idx2,)
-        find_user2 = ('SELECT * FROM marathon2 WHERE ids = ?')
+        find_user2 = ('SELECT * FROM marathon WHERE ids = ?')
         c.execute(find_user2,idxx2,)
         x = c.fetchone()    
         if  not x:
@@ -158,7 +155,7 @@ def admin():
             def show2():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                idx = input('\nรวจสอบเลขบัตร\t')
+                idx = input('\nCheck your ID card number\t')
                 idxx = (idx,)
                 find_user = ('SELECT * FROM marathon WHERE ids = ?')
                 c.execute(find_user,idxx,)
@@ -221,11 +218,11 @@ def admin():
                 try:
                     conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                     c = conn.cursor()
-                    ccc = input('ประเภท [full/half/mini/funrun]')
-                    c.execute('SELECT * FROM  marathon2 WHERE typerun = "{}" ORDER BY timex'.format(ccc)) 
+                    ccc = input('Type [full/half/mini/funrun]')
+                    c.execute('SELECT * FROM  marathon WHERE typerun = "{}" ORDER BY timex'.format(ccc)) 
                     result = c.fetchall()
                     i=0
-                    print('อันดับของ {}'.format(ccc))
+                    print('Rank {}'.format(ccc))
                     print('-'*64)
                     print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
                     print('-'*64)
@@ -267,16 +264,14 @@ def admin():
                     print('No data found!\n')
                 else:                                
                     fname,lname = input('Name - Surname >>> ').split()
-                    ids = input('เลขบัตรประจำตัวประชาชน >>> ')
+                    ids = input('ID card number >>> ')
                     sex = input('Gender >>> ')
                     age = input('Age >>> ')
-                    typerun = input('ประเภท >>> ')
+                    typerun = input('Type >>> ')
                     email = input('Email >>> ')
                     num = input('Phone number >>> ')
                     data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
-                    data2 = (fname,lname,ids,typerun,'{}'.format(iid))
-                    c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE id = ?''',data)
-                    c.execute('''UPDATE marathon2 SET fname =?, lname =?, ids =?, typerun =?  WHERE id = ?''',data2)
+                    c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE ids = ?''',data)
                     conn.commit()
                     c.close()
                     print('แก้ไขข้อมูลเรียบร้อย\n')
@@ -288,14 +283,14 @@ def admin():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
                 iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
-                c.execute('SELECT * FROM marathon2 WHERE ids = "{}"'.format(iid))
+                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
                     print('No data found!\n')
                 else:
                     timex = input('Time >>> ')
                     data = (timex,'{}'.format(iid))
-                    c.execute('''UPDATE marathon2 SET timex = ? WHERE ids = ?''',data)
+                    c.execute('''UPDATE marathon SET timex = ? WHERE ids = ?''',data)
                     conn.commit()
                     c.close()
                     print('แก้ไขข้อมูลเรียบร้อย\n')
@@ -315,27 +310,6 @@ def admin():
             elif choice2 == 'exit':
                 print('\n-------------- Logged out -------------\n')
                 break
-
-def ss():
-    try:
-        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-        c = conn.cursor()
-        ccc = input('')
-        c.execute('SELECT * FROM  marathon2 WHERE typerun = "{}" ORDER BY timex'.format(ccc))
-        result = c.fetchall()
-        i=0
-        print('อันดับของ {}'.format(ccc))
-        print('-'*64)
-        print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
-        print('-'*64)
-        for x in result:
-            i+=1
-            print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[4],x[5]))
-        print('-'*64,'\n')
-        conn.commit()        
-        c.close()
-    except:
-        print('ERROR!')
 
 while True:
     menu()
