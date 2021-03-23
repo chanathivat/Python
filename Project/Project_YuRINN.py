@@ -1,3 +1,4 @@
+from abc import ABCMeta
 import os
 import sqlite3
 
@@ -15,12 +16,18 @@ def menu():
     print('-'*39)
     choice = input('- Select > ')
 
-def add():
+
+def add():  
     try:    
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        ids = str(input('ID card number\t'))
+        ids = str(input('ID card number\t')) #asd 123
+        idss = int(ids)
+        if type(idss) != int:
+            c.close()
+            add()
         if len(ids) != 13:
+            print('Please enter the ID card number of 13 digits.')
             c.close()
             add()         
         c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(ids))
@@ -34,6 +41,9 @@ def add():
                 c.close()
                 add()                    
             age = int(input('Age\t'))
+            if type(age) != int:
+                c.close()
+                add()
             typerun = str(input('Running Type [full/half/mini/funrun]\t'))
             if typerun == 'full':
                 pass
@@ -62,13 +72,14 @@ def add():
             print('This number already exists!!\n')
             add()           
     except:
-        print('error')
+        print('Something is wrong.')
+        add()
 
 def showx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx = str(input('\nCheck your ID card number\t'))#
+        idx = str(input('\nCheck ID card number\t'))#
         idxx = (idx,)
         find_user = ('SELECT * FROM marathon WHERE ids = ?')
         c.execute(find_user,idxx,)
@@ -87,7 +98,7 @@ def showxx():
     try:
         conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
         c = conn.cursor()
-        idx2 = str(input('\nCheck your ID card number\t'))#
+        idx2 = str(input('\nCheck ID card number\t'))#
         idxx2 = (idx2,)
         find_user2 = ('SELECT * FROM marathon WHERE ids = ?')
         c.execute(find_user2,idxx2,)
@@ -95,7 +106,7 @@ def showxx():
         if  not x:
             print("\nNo data found!\n")
         else:
-            print('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nRunning Type\t{4}\nTime\t{5}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5]))
+            print('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nRunning Type\t{4}\nTime\t{5}\n\n'.format(x[0],x[1],x[2],x[3],x[6],x[9]))
             conn.commit()
             conn.close()
     except:
@@ -134,7 +145,6 @@ def admin():
                     print('No data found!\n')
                 else:
                     c.execute('DELETE FROM marathon WHERE ids = "{}"'.format(del_id))
-                    c.execute('DELETE FROM marathon2 WHERE ids = "{}"'.format(del_id))
                     conn.commit()
                     c.close()
                     print('The data has been deleted.\n')
@@ -147,22 +157,29 @@ def admin():
             print('| {0:<35}|{1:<25}|'.format('> Show all information','           a '))
             print('| {0:<35}|{1:<25}|'.format('> Show individual information','           b '))
             print('| {0:<35}|{1:<25}|'.format('> Show running type information','  full/half/mini/funrun'))
-            print('| {0:<35}|{1:<25}|'.format('> Show rank','           s '))
+            print('| {0:<35}|{1:<25}|'.format('> Show running result','           s '))
             print('| {0:<35}|{1:<25}|'.format('> Back','          back '))
             print('-'*64)
             showa = input('- Select > ')
             
             def show2():
-                conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-                c = conn.cursor()
-                idx = input('\nCheck your ID card number\t')
-                idxx = (idx,)
-                find_user = ('SELECT * FROM marathon WHERE ids = ?')
-                c.execute(find_user,idxx,)
-                x = c.fetchone()
-                print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
-                conn.commit()
-                conn.close()
+                try:
+                    conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                    c = conn.cursor()
+                    idx2 = str(input('\nCheck ID card number\t'))#
+                    idxx2 = (idx2,)
+                    find_user2 = ('SELECT * FROM marathon WHERE ids = ?')
+                    c.execute(find_user2,idxx2,)
+                    x = c.fetchone()    
+                    if  not x:
+                        print("\nNo data found!\n")
+                    else:
+                        print('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]))
+                        conn.commit()
+                        conn.close()
+                except:
+                    print('ERROR!')
+                    add()
 
             def show3():
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
@@ -214,26 +231,80 @@ def admin():
                 conn.commit()
                 conn.close()
 
-            def showre():
-                try:
-                    conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
-                    c = conn.cursor()
-                    ccc = input('Type [full/half/mini/funrun]')
-                    c.execute('SELECT * FROM  marathon WHERE typerun = "{}" ORDER BY timex'.format(ccc)) 
-                    result = c.fetchall()
-                    i=0
-                    print('Rank {}'.format(ccc))
-                    print('-'*64)
-                    print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
-                    print('-'*64)
-                    for x in result:
-                        i+=1
-                        print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[4],x[5]))
-                    print('-'*64,'\n')
-                    conn.commit()
-                    c.close()                            
-                except:
-                    print('ERROR!')
+
+
+            def showreme():
+                print('-'*64)
+                print('| {0:<35}|{1:<25}|'.format('> Show all running result','           a'))
+                print('| {0:<35}|{1:<25}|'.format('> Show personal running results','           b'))
+                print('| {0:<35}|{1:<25}|'.format('> Show type running results','           c'))
+                print('| {0:<35}|{1:<25}|'.format('> Back','          back'))
+                print('-'*64)
+                showa2 = input('- Select > ')
+                def showre():
+                    try:
+                        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                        c = conn.cursor()
+                        ccc = input('Type [full/half/mini/funrun] ')
+                        c.execute('SELECT * FROM  marathon WHERE typerun = "{}" ORDER BY timex'.format(ccc)) 
+                        result = c.fetchall()
+                        i=0
+                        print('Rank {}'.format(ccc))
+                        print('-'*64)
+                        print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
+                        print('-'*64)
+                        for x in result:
+                            i+=1
+                            print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[6],x[9]))
+                        print('-'*64,'\n')
+                        conn.commit()
+                        c.close()
+                        showreme()                           
+                    except:
+                        print('ERROR!')
+                def showrep():
+                    try:
+                        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                        c = conn.cursor()
+                        ccc = input('Check ID card number ')
+                        c.execute('SELECT * FROM  marathon WHERE ids = "{}" ORDER BY timex'.format(ccc)) 
+                        x = c.fetchone()
+                        print('Information of ID card number {}'.format(ccc))
+                        print('\nNo\t{0:<8}\nID card number\t{3:<27}\nName - Surname\t{1:<15}{2:<15}\nRunning Type\t{4}\nTime\t{5}\n\n'.format(x[0],x[1],x[2],x[3],x[6],x[9]))
+                        print('-'*64,'\n')
+                        conn.commit()
+                        c.close()
+                        showreme()                           
+                    except:
+                        print('ERROR!')
+                def showrea():
+                    try:
+                        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                        c = conn.cursor()
+                        c.execute('SELECT * FROM  marathon ORDER BY timex') 
+                        result = c.fetchall()
+                        i=0
+                        print('All Information ')
+                        print('-'*64)
+                        print('{0:<7}{1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format('RANK | ','    NAME','     ID','  TYPE','  TIME'))
+                        print('-'*64)
+                        for x in result:
+                            i+=1
+                            print(' {0:<4}| {1:<15}| {2:<15}| {3:<10}| {4:<10}|'.format(i,x[1],x[3],x[6],x[9]))
+                        print('-'*64,'\n')
+                        conn.commit()
+                        c.close()
+                        showreme()                           
+                    except:
+                        print('ERROR!')
+                if showa2 == 'a':
+                    showrea()
+                elif showa2 == 'b':
+                    showrep()
+                elif showa2 == 'c':
+                    showre()
+                elif showa2 == 'back':
+                    show()                
 
             if showa == 'a':
                 show3()
@@ -248,7 +319,7 @@ def admin():
             elif showa == 'funrun':
                 showfunrun()
             elif showa == 's':
-                showre()
+                showreme()
             if showa == 'back':
                 adminmenu()
 
@@ -257,24 +328,62 @@ def admin():
             try:
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
+                iid = input('\nInsert ID card to be edited : ')
                 c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
                     print('No data found!\n')
                 else:                                
-                    fname,lname = input('Name - Surname >>> ').split()
                     ids = input('ID card number >>> ')
-                    sex = input('Gender >>> ')
-                    age = input('Age >>> ')
-                    typerun = input('Type >>> ')
-                    email = input('Email >>> ')
-                    num = input('Phone number >>> ')
-                    data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
-                    c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE ids = ?''',data)
-                    conn.commit()
-                    c.close()
-                    print('แก้ไขข้อมูลเรียบร้อย\n')
+                    idss = int(ids)
+                    if type(idss) != int:
+                        c.close()
+                        add()
+                    if len(ids) != 13:
+                        print('Please enter the ID card number of 13 digits.')
+                        c.close()
+                        add()         
+                    c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(ids))
+                    b = c.fetchone()    
+                    if not b:
+                        fname,lname = input('Name - Surname >>> ').split()
+                        sex = input('Gender >>> ')
+                        if sex == 'M' or sex == 'F' :
+                            pass
+                        else:
+                            c.close()
+                            edit()       
+                        age = int(input('Age >>> '))
+                        if type(age) != int:
+                            c.close()
+                            edit()
+                        typerun = input('Type >>> ')
+                        if typerun == 'full':
+                            pass
+                        elif typerun == 'half':
+                            pass
+                        elif typerun == 'mini':
+                            pass
+                        elif typerun == 'funrun':
+                            pass
+                        else:
+                            c.close()
+                            print('Something is wrong.')
+                            edit()
+                        email = input('Email >>> ')
+                        num = input('Phone number >>> ')
+                        if len(num) != 10:
+                            c.close()
+                            edit()
+                        data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
+                        c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE ids = ?''',data)
+                        conn.commit()
+                        c.close()
+                        print('The information has been edited.\n')
+                    else:
+                        c.close()
+                        print('This number already exists!!\n')
+                        edit()   
             except:
                 print('\nERROR!\n')
 
@@ -282,7 +391,7 @@ def admin():
             try:
                 conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
                 c = conn.cursor()
-                iid = input('\nเลือกเลขบัตรที่ต้องการแก้ไข : ')
+                iid = input('\nInsert ID card to be edited : ')
                 c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
                 r = c.fetchone()
                 if not r:
@@ -293,37 +402,43 @@ def admin():
                     c.execute('''UPDATE marathon SET timex = ? WHERE ids = ?''',data)
                     conn.commit()
                     c.close()
-                    print('แก้ไขข้อมูลเรียบร้อย\n')
+                    print('The information has been edited.\n')
             except:
                 print('\nERROR!\n')
 
         while True:
             adminmenu()
             if  choice2 == 'a':
+                os.system('cls')
                 dele()
             if choice2 == 'b':
+                os.system('cls')
                 show()
             if choice2 == 'e':
+                os.system('cls')
                 edit()
             elif choice2 == 'ea':
+                os.system('cls')
                 edit2()
             elif choice2 == 'exit':
+                os.system('cls')
                 print('\n-------------- Logged out -------------\n')
                 break
 
 while True:
     menu()
     if choice == 'a':
+        os.system('cls')
+        print('Enter the ID card number of 13 digits.')  
         add()
-    #    os.system('cls')
     elif choice == 'b':
+        os.system('cls')
         showx()
     elif choice == 'c':
+        os.system('cls')
         showxx()
     elif choice == 'l':
         os.system('cls')
         admin()
-    elif choice == 'ss':
-        ss()
     elif choice == 'exit':
         break
