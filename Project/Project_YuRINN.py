@@ -143,12 +143,10 @@ def editx():
             ee6 = input('edit Phone number y/n ')
             if ee6 == 'y':
                 num = input('Phone number >>> ')
-                if len(num) != 10:
-                    c.close()
-                    editx()
-                elif len(num) == 10:
-                    datae = (email,'{}'.format(iid))
-                    c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+                if len(num) == 10:
+                    datann = (num,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET num =? WHERE ids =? ''',datann)
+
             elif ee6 == 'n' :
                 pass
         conn.commit()
@@ -480,12 +478,9 @@ def admin():
                     ee6 = input('edit Phone number y/n ')
                     if ee6 == 'y':
                         num = input('Phone number >>> ')
-                        if len(num) != 10:
-                            c.close()
-                            edit()
-                        elif len(num) == 10:
-                            datae = (email,'{}'.format(iid))
-                            c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+                        if len(num) == 10:
+                            datann = (num,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET num =? WHERE ids =? ''',datann)
                     elif ee6 == 'n' :
                         pass
                 conn.commit()
