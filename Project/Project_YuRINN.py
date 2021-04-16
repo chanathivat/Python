@@ -9,6 +9,7 @@ def menu():
     global choice
     print('-'*39)
     print('| {0:<25}|{1:<10}|'.format(' Register','    a '))
+    print('| {0:<25}|{1:<10}|'.format(' Edit','    e '))
     print('| {0:<25}|{1:<10}|'.format(' Check Information','    b '))
     print('| {0:<25}|{1:<10}|'.format(' Check running result','    c '))
     print('| {0:<25}|{1:<10}|'.format(' Admin only','    l '))
@@ -74,6 +75,94 @@ def add():
     except:
         print('Something is wrong.')
         add()
+
+def editx():
+    try:
+        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+        c = conn.cursor()
+        iid = input('\nInsert ID card to be edited : ')
+        c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
+        r = c.fetchone()
+        if not r:
+            print('No data found!\n')
+        else:  
+            print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8]))      
+            ee1 = input('edit Name - Surname y/n ')
+            if ee1 == 'y':
+                fname,lname = input('Name - Surname >>> ').split()
+                datan = (fname,lname,'{}'.format(iid))
+                c.execute('''UPDATE marathon SET fname =?, lname =? WHERE ids =? ''',datan)
+            elif ee1 == 'n' :
+                pass
+            ee2 = input('edit Gender y/n ')
+            if ee2 == 'y':
+                sex = input('Gender >>> ')
+                datas = (sex,'{}'.format(iid))
+                c.execute('''UPDATE marathon SET sex =? WHERE ids =? ''',datas)
+            elif ee2 == 'n' :
+                pass 
+            ee3 = input('edit Age y/n ')
+            if ee3 == 'y':      
+                age = int(input('Age >>> '))
+                if type(age) == int:
+                    dataa = (age,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET age =? WHERE ids =? ''',dataa)                    
+                elif type(age) != int:
+                    c.close()
+                    editx()
+            elif ee3 == 'n' :
+                pass
+            ee4 = input('edit Type y/n ')
+            if ee4 =='y':
+                typerun = input('Type >>> ')
+                if typerun == 'full':
+                    datat = (typerun,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
+                elif typerun == 'half':
+                    datat = (typerun,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
+                elif typerun == 'mini':
+                    datat = (typerun,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
+                elif typerun == 'funrun':
+                    datat = (typerun,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
+                else:
+                    c.close()
+                    print('Something is wrong.')
+                    editx()
+            elif ee4 == 'n' :
+                pass
+            ee5 = input('edit Email y/n ')
+            if ee5 == 'y':
+                email = input('Email >>> ')
+                datae = (email,'{}'.format(iid))
+                c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+            elif ee5 == 'n' :
+                pass
+            ee6 = input('edit Phone number y/n ')
+            if ee6 == 'y':
+                num = input('Phone number >>> ')
+                if len(num) != 10:
+                    c.close()
+                    editx()
+                elif len(num) == 10:
+                    datae = (email,'{}'.format(iid))
+                    c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+            elif ee6 == 'n' :
+                pass
+        conn.commit()
+        c.close()
+
+        conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
+        b = c.fetchone()
+        print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8]))      
+        print('The information has been edited.\n')   
+        c.close()  
+    except:
+        print('\nERROR!\n')
 
 def showx():
     try:
@@ -333,59 +422,85 @@ def admin():
                 r = c.fetchone()
                 if not r:
                     print('No data found!\n')
-                else:                                
-                    ids = input('ID card number >>> ')
-                    idss = int(ids)
-                    if type(idss) != int:
-                        c.close()
-                        add()
-                    if len(ids) != 13:
-                        print('Please enter the ID card number of 13 digits.')
-                        c.close()
-                        add()         
-                    c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(ids))
-                    b = c.fetchone()    
-                    if not b:
+                else:  
+                    print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8]))      
+                    ee1 = input('edit Name - Surname y/n ')
+                    if ee1 == 'y':
                         fname,lname = input('Name - Surname >>> ').split()
+                        datan = (fname,lname,'{}'.format(iid))
+                        c.execute('''UPDATE marathon SET fname =?, lname =? WHERE ids =? ''',datan)
+                    elif ee1 == 'n' :
+                        pass
+                    ee2 = input('edit Gender y/n ')
+                    if ee2 == 'y':
                         sex = input('Gender >>> ')
-                        if sex == 'M' or sex == 'F' :
-                            pass
-                        else:
-                            c.close()
-                            edit()       
+                        datas = (sex,'{}'.format(iid))
+                        c.execute('''UPDATE marathon SET sex =? WHERE ids =? ''',datas)
+                    elif ee2 == 'n' :
+                        pass 
+                    ee3 = input('edit Age y/n ')
+                    if ee3 == 'y':      
                         age = int(input('Age >>> '))
-                        if type(age) != int:
+                        if type(age) == int:
+                            dataa = (age,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET age =? WHERE ids =? ''',dataa)                    
+                        elif type(age) != int:
                             c.close()
                             edit()
+                    elif ee3 == 'n' :
+                        pass
+                    ee4 = input('edit Type y/n ')
+                    if ee4 =='y':
                         typerun = input('Type >>> ')
                         if typerun == 'full':
-                            pass
+                            datat = (typerun,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
                         elif typerun == 'half':
-                            pass
+                            datat = (typerun,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
                         elif typerun == 'mini':
-                            pass
+                            datat = (typerun,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
                         elif typerun == 'funrun':
-                            pass
+                            datat = (typerun,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET typerun =? WHERE ids =? ''',datat)
                         else:
                             c.close()
                             print('Something is wrong.')
                             edit()
+                    elif ee4 == 'n' :
+                        pass
+                    ee5 = input('edit Email y/n ')
+                    if ee5 == 'y':
                         email = input('Email >>> ')
+                        datae = (email,'{}'.format(iid))
+                        c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+                    elif ee5 == 'n' :
+                        pass
+                    ee6 = input('edit Phone number y/n ')
+                    if ee6 == 'y':
                         num = input('Phone number >>> ')
                         if len(num) != 10:
                             c.close()
                             edit()
-                        data = (fname,lname,ids,sex,age,typerun,email,num,'{}'.format(iid))
-                        c.execute('''UPDATE marathon SET fname =?, lname =?, ids =?, sex =?, age =?, typerun =? ,email =? , num = ? WHERE ids = ?''',data)
-                        conn.commit()
-                        c.close()
-                        print('The information has been edited.\n')
-                    else:
-                        c.close()
-                        print('This number already exists!!\n')
-                        edit()   
+                        elif len(num) == 10:
+                            datae = (email,'{}'.format(iid))
+                            c.execute('''UPDATE marathon SET email =? WHERE ids =? ''',datae)
+                    elif ee6 == 'n' :
+                        pass
+                conn.commit()
+                c.close()
+        
+                conn = sqlite3.connect(r'C:\Users\User\Desktop\Chanathivat_python\Project\Marathon.db')
+                c = conn.cursor()
+                c.execute('SELECT * FROM marathon WHERE ids = "{}"'.format(iid))
+                b = c.fetchone()
+                print ('\nNo\t{0:<8}\nName - Surname\t{1:<15}{2:<15}\nID card number\t{3:<27}\nGender\t{4}\nAge\t{5}\nRunning Type\t{6}\nEmail\t{7}\nPhone number\t{8}\n\n'.format(b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8]))      
+                print('The information has been edited.\n')     
+                c.close()
             except:
                 print('\nERROR!\n')
+        
 
         def edit2():
             try:
@@ -431,6 +546,9 @@ while True:
         os.system('cls')
         print('Enter the ID card number of 13 digits.')  
         add()
+    elif choice == 'e':
+        os.system('cls')
+        editx()
     elif choice == 'b':
         os.system('cls')
         showx()
